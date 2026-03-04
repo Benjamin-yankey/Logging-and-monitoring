@@ -199,7 +199,7 @@ resource "aws_iam_role_policy" "vpc_flow_logs_policy" {
 
 resource "aws_flow_log" "vpc" {
   log_destination_type = "cloud-watch-logs"
-  log_group_name       = aws_cloudwatch_log_group.vpc_flow.name
+  log_destination      = aws_cloudwatch_log_group.vpc_flow.arn
   vpc_id               = var.vpc_id
   traffic_type         = "ALL"
   iam_role_arn         = aws_iam_role.vpc_flow_logs.arn
@@ -292,7 +292,7 @@ resource "aws_s3_bucket_policy" "cloudtrail_logs" {
 }
 
 resource "aws_cloudtrail" "main" {
-  name                          = "${var.project_name}-${var.environment}-trail"
+  name                          = "${var.project_name}-${var.environment}-trail-v2"
   s3_bucket_name                = aws_s3_bucket.cloudtrail_logs.id
   include_global_service_events = true
   is_multi_region_trail         = true
