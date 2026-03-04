@@ -86,6 +86,8 @@ module "jenkins" {
   jenkins_admin_password     = var.jenkins_admin_password
   aws_region                 = var.aws_region
   additional_iam_policy_arns = [module.monitoring.cloudwatch_agent_policy_arn]
+}
+
 # Application EC2 Module
 module "app_server" {
   source = "./modules/ec2"
@@ -102,10 +104,6 @@ module "app_server" {
     environment  = var.environment
     aws_region   = var.aws_region
   })
-  iam_instance_profile = module.monitoring.cloudwatch_agent_profile_name
-  name                 = "app-server"
-}
-
   iam_instance_profile = module.monitoring.cloudwatch_agent_profile_name
   name                 = "app-server"
 }
