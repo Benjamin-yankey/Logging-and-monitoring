@@ -39,6 +39,12 @@ variable "user_data" {
   default     = ""
 }
 
+variable "iam_instance_profile" {
+  description = "The IAM Instance Profile name to launch the instance with"
+  type        = string
+  default     = null
+}
+
 variable "name" {
   description = "Name suffix used in the AWS Name tag (e.g. app-server, monitoring)"
   type        = string

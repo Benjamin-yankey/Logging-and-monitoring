@@ -3,6 +3,16 @@ output "cloudwatch_agent_role_arn" {
   value       = aws_iam_role.cloudwatch_agent.arn
 }
 
+output "cloudwatch_agent_profile_name" {
+  description = "IAM instance profile name for CloudWatch agent"
+  value       = aws_iam_instance_profile.cloudwatch_agent.name
+}
+
+output "cloudwatch_agent_policy_arn" {
+  description = "IAM policy ARN for CloudWatch agent"
+  value       = aws_iam_policy.cloudwatch_agent.arn
+}
+
 output "sns_topic_arn" {
   description = "SNS topic ARN for alerts"
   value       = aws_sns_topic.alerts.arn

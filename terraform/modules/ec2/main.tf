@@ -6,6 +6,7 @@ resource "aws_instance" "app_server" {
   vpc_security_group_ids = var.security_group_ids
   user_data                    = var.user_data
   user_data_replace_on_change  = true
+  iam_instance_profile         = var.iam_instance_profile
 
   root_block_device {
     volume_type = "gp3"

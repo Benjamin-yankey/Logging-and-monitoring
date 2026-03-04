@@ -39,6 +39,18 @@ variable "jenkins_admin_password" {
   sensitive   = true
 }
 
+variable "iam_instance_profile" {
+  description = "IAM instance profile name"
+  type        = string
+  default     = null
+}
+
+variable "additional_iam_policy_arns" {
+  description = "List of additional IAM policy ARNs to attach to the Jenkins role"
+  type        = list(string)
+  default     = []
+}
+
 variable "aws_region" {
   description = "AWS region for Secrets Manager API calls"
   type        = string

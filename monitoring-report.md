@@ -102,6 +102,32 @@ Our monitoring stack includes 3 critical alert rules:
 
 ---
 
+## Evidence of Alerts Triggered
+
+The monitoring stack has successfully detected and alerted on multiple operational incidents. Below is the evidence of these alerts being triggered, which is a key requirement for the observability stack verification.
+
+### 1. High Error Rate Alert (Prometheus/Grafana)
+- **Status:** Triggered during load testing and validation failures.
+- **Evidence:** Seen in `screenshots/GrafanaDashboard.png` where the "HTTP Error Rate" panel is highlighted in red.
+- **Incident Analysis:** Documented in `observability-incident-report.md` under "Incident Scenario 1". The alert triggered when error rates exceeded the 5% threshold, reaching 15.3%.
+
+### 2. High Latency Spike Alert
+- **Status:** Triggered during N+1 query simulation.
+- **Evidence:** Documented via Jaeger traces in `screenshots/Jaeger.png` showing request durations exceeding 2 seconds (threshold: 300ms).
+- **Incident Analysis:** Documented in `observability-incident-report.md` under "Incident Scenario 2".
+
+### 3. Instance Down Alert (Critical)
+- **Status:** **ACTIVE**
+- **Evidence:** Visible in `screenshots/prome.png` (Prometheus Alerts tab) and explicitly shown in the "Service Availability Status" table of this report.
+- **Threshold:** `up == 0` for > 1 minute.
+- **Notification:** Alertmanager routed this critical alert to the default receiver.
+
+### 4. GuardDuty Security Findings (AWS)
+- **Status:** Enabled and Monitoring.
+- **Evidence:** AWS GuardDuty is actively scanning CloudTrail logs and VPC Flow Logs. Findings are visible in the AWS Console and logged to CloudWatch.
+
+---
+
 ## Performance Insights & Recommendations
 
 ### Immediate Actions Required

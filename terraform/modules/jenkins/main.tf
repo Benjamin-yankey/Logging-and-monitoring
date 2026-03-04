@@ -56,6 +56,12 @@ resource "aws_iam_role_policy" "jenkins_secrets_access" {
   })
 }
 
+resource "aws_iam_role_policy_attachment" "jenkins_additional" {
+  count      = length(var.additional_iam_policy_arns)
+  role       = aws_iam_role.jenkins.name
+  policy_arn = var.additional_iam_policy_arns[count.index]
+}
+
 resource "aws_iam_instance_profile" "jenkins" {
   name = "${var.project_name}-${var.environment}-jenkins-profile"
   role = aws_iam_role.jenkins.name

@@ -58,9 +58,11 @@ This pipeline implements comprehensive security best practices across all layers
 
 - **IMDSv2 Enforcement**: Prevents SSRF attacks on EC2 metadata service
 - **Encrypted EBS Volumes**: All root volumes encrypted at rest
+- **CloudTrail API Auditing**: Records all account activity, stored in encrypted S3 bucket
+- **S3 Log Storage**: CloudTrail logs stored with AES-256 encryption and 90-day lifecycle to Glacier
+- **GuardDuty**: Threat detection enabled for malicious activity monitoring
 - **Restricted Security Groups**: SSH access limited to `allowed_ips`, no 0.0.0.0/0
-- **VPC Isolation**: Private subnets available, network segmentation
-- **Security Group Rules**: Separate rules prevent circular dependencies
+- **VPC Flow Logs**: Captures IP traffic information for VPC interfaces
 
 ### CI/CD Security
 

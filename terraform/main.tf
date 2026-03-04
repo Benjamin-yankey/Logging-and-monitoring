@@ -76,44 +76,53 @@ module "security_groups" {
 module "jenkins" {
   source = "./modules/jenkins"
 
-  project_name           = var.project_name
-  environment            = var.environment
-  ami_id                 = data.aws_ami.amazon_linux_2.id
-  instance_type          = var.jenkins_instance_type
-  key_name               = module.keypair.key_name
-  subnet_id              = module.vpc.public_subnets[0]
-  security_group_ids     = [module.security_groups.jenkins_sg_id]
-  jenkins_admin_password = var.jenkins_admin_password
-  aws_region             = var.aws_region
-}
-
+  project_name               = var.project_name
+  environment                = var.environment
+  ami_id                     = data.aws_ami.amazon_linux_2.id
+  instance_type              = var.jenkins_instance_type
+  key_name                   = module.keypair.key_name
+  subnet_id                  = module.vpc.public_subnets[0]
+  security_group_ids         = [module.security_groups.jenkins_sg_id]
+  jenkins_admin_password     = var.jenkins_admin_password
+  aws_region                 = var.aws_region
+  additional_iam_policy_arns = [module.monitoring.cloudwatch_agent_policy_arn]
 # Application EC2 Module
 module "app_server" {
   source = "./modules/ec2"
 
-  project_name       = var.project_name
-  environment        = var.environment
-  ami_id             = data.aws_ami.amazon_linux_2.id
-  instance_type      = var.app_instance_type
-  key_name           = module.keypair.key_name
-  subnet_id          = module.vpc.public_subnets[1]
-  security_group_ids = [module.security_groups.app_sg_id]
-  user_data          = file("${path.module}/scripts/app-server-setup.sh")
-  name               = "app-server"
+  project_name         = var.project_name
+  environment          = var.environment
+  ami_id               = data.aws_ami.amazon_linux_2.id
+  instance_type        = var.app_instance_type
+  key_name             = module.keypair.key_name
+  subnet_id            = module.vpc.public_subnets[1]
+  security_group_ids   = [module.security_groups.app_sg_id]
+  user_data            = templatefile("${path.module}/scripts/app-server-setup.sh", {
+    project_name = var.project_name
+    environment  = var.environment
+    aws_region   = var.aws_region
+  })
+  iam_instance_profile = module.monitoring.cloudwatch_agent_profile_name
+  name                 = "app-server"
+}
+
+  iam_instance_profile = module.monitoring.cloudwatch_agent_profile_name
+  name                 = "app-server"
 }
 
 # Monitoring EC2 Module (Prometheus + Grafana + Alertmanager + Node Exporter)
 module "monitoring_server" {
   source = "./modules/ec2"
 
-  project_name       = var.project_name
-  environment        = var.environment
-  ami_id             = data.aws_ami.amazon_linux_2.id
-  instance_type      = var.monitoring_instance_type
-  key_name           = module.keypair.key_name
-  subnet_id          = module.vpc.public_subnets[0]
-  security_group_ids = [module.security_groups.monitoring_sg_id]
-  name               = "monitoring"
+  project_name         = var.project_name
+  environment          = var.environment
+  ami_id               = data.aws_ami.amazon_linux_2.id
+  instance_type        = var.monitoring_instance_type
+  key_name             = module.keypair.key_name
+  subnet_id            = module.vpc.public_subnets[0]
+  security_group_ids   = [module.security_groups.monitoring_sg_id]
+  iam_instance_profile = module.monitoring.cloudwatch_agent_profile_name
+  name                 = "monitoring"
 
   # templatefile injects the app server's private IP and credentials so the
   # setup script can write prometheus.yml and the docker-compose .env file
