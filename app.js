@@ -179,17 +179,7 @@ function getDateOnly(value) {
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use((req, res, next) => {
   helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrcAttr: ["'unsafe-inline'"],
-        formAction: ["'self'", ...cspFormActionOrigins],
-        connectSrc: ["'self'"],
-        imgSrc: ["'self'", "data:"],
-      },
-    },
+    contentSecurityPolicy: false,
     hsts: false,
     crossOriginOpenerPolicy: false,
     originAgentCluster: false,
@@ -349,6 +339,12 @@ app.get("/", (req, res) => {
     </style>
 </head>
 <body>
+    <script>
+        // Force HTTP if the browser tries to upgrade to HTTPS
+        if (window.location.protocol === 'https:') {
+            window.location.href = window.location.href.replace('https:', 'http:');
+        }
+    </script>
     <div class="container">
         <h1>✓ Todo List</h1>
         <p class="status">✓ System Online</p>
