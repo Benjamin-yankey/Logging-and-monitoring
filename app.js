@@ -428,23 +428,25 @@ app.get("/", (req, res) => {
         let currentFilter = 'all';
         let allTodos = [];
 
-        function getApiUrl(path) {
-            return new URL(path, window.location.origin);
-        }
-        
-        function loadTodos(search = '') {
-            const url = getApiUrl('/api/todos');
-            if (search) url.searchParams.set('search', search);
-            
-            fetch(url)
-                .then(r => r.json())
-                .then(data => {
-                    allTodos = data.todos;
-                    document.getElementById('activeTodos').textContent = data.active;
-                    document.getElementById('completedTodos').textContent = data.completed;
-                    renderTodos(data.todos);
-                })
-                .catch(err => console.error('Load Error:', err));
+        async function loadTodos(search = '') {
+            try {
+                let url = '/api/todos';
+                if (search) {
+                    const params = new URLSearchParams();
+                    params.set('search', search);
+                    url += '?' + params.toString();
+                }
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                allTodos = data.todos;
+                document.getElementById('activeTodos').textContent = data.active;
+                document.getElementById('completedTodos').textContent = data.completed;
+                renderTodos(data.todos);
+            } catch (err) {
+                console.error('Load Error:', err);
+            }
         }
 
         function renderTodos(todos) {
@@ -504,7 +506,7 @@ app.get("/", (req, res) => {
                 dueDate: dueDateValue || null
             };
             try {
-                const response = await fetch(getApiUrl('/api/todos'), {
+                const response = await fetch('/api/todos', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(data)
@@ -524,7 +526,7 @@ app.get("/", (req, res) => {
 
         async function toggleTodo(id) {
             try {
-                await fetch(getApiUrl('/api/todos/' + id + '/toggle'), {
+                await fetch('/api/todos/' + id + '/toggle', {
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json'}
                 });
@@ -536,7 +538,7 @@ app.get("/", (req, res) => {
 
         async function deleteTodo(id) {
             try {
-                await fetch(getApiUrl('/api/todos/' + id), {
+                await fetch('/api/todos/' + id, {
                     method: 'DELETE',
                     headers: {'Content-Type': 'application/json'}
                 });
