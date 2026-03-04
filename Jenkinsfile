@@ -174,10 +174,58 @@ EOF
             '''
         }
         success {
-            echo 'Pipeline completed successfully!'
+            script {
+                sendSlackNotification('SUCCESS')
+            }
         }
         failure {
-            echo 'Pipeline failed!'
+            script {
+                sendSlackNotification('FAILURE')
+            }
         }
     }
+}
+
+def sendSlackNotification(String buildStatus) {
+    def color = buildStatus == 'SUCCESS' ? '#36a64f' : '#eb4034'
+    def headline = buildStatus == 'SUCCESS' ? "✅ Build Successful" : "❌ Build Failed"
+    def channel = "#yram" // Update this to your Slack channel name
+    
+    // Get Git details
+    def commitShort = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+    def commitAuthor = sh(script: "git log -1 --pretty=format:'%an'", returnStdout: true).trim()
+    
+    // Prepare security scan summary
+    def scanResults = "Trivy: High/Critical Scan Completed\nNPM Audit: Moderate/Above Scan Completed"
+    def errorBlock = buildStatus == 'FAILURE' ? "\n⚠️ *Error:* Build or deployment failed. Please check the logs.\n" : ""
+    def imagePath = "${env.REGISTRY_CREDS_USR}/${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
+
+    slackSend(
+        channel: channel,
+        color: color,
+        tokenCredentialId: 'slack-tokens',
+        message: """
+${headline}
+
+Build:      #${env.BUILD_NUMBER}
+Branch:     ${env.GIT_BRANCH ?: 'main'}
+Commit:     ${commitShort} by ${commitAuthor}
+Image:      ${imagePath}
+Duration:   ${currentBuild.durationString}
+
+─────────────────────────────────────
+Security Scan Results
+─────────────────────────────────────
+${scanResults}
+${errorBlock}
+─────────────────────────────────────
+Reports
+─────────────────────────────────────
+npm audit: ${env.BUILD_URL}artifact/npm-audit-report.json
+Trivy    : ${env.BUILD_URL}artifact/trivy-report.json
+
+Build    : ${env.BUILD_URL}
+Logs     : ${env.BUILD_URL}console
+        """.stripIndent()
+    )
 }
