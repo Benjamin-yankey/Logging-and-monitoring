@@ -28,8 +28,8 @@ cat > /opt/app/start-app.sh << 'APPSTART'
 #!/bin/bash
 # Template variables: project_name=${project_name}, environment=${environment}, aws_region=${aws_region}
 
-REGISTRY_CREDS_USR="${1:-}"
-REGISTRY_CREDS_PSW="${2:-}"
+REGISTRY_CREDS_USR="$${1:-}"
+REGISTRY_CREDS_PSW="$${2:-}"
 CONTAINER_NAME="node-app"
 DOCKER_IMAGE="cicd-node-app"
 LOG_GROUP="/${project_name}/${environment}/app"
