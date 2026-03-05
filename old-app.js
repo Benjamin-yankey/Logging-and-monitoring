@@ -346,8 +346,8 @@ app.get("/", (req, res) => {
         }
     </script>
     <div class="container">
-        <h1>✓ Todo List</h1>
-        <p class="status">✓ System Online</p>
+        <h1>Todo List</h1>
+        <p class="status">System Online</p>
         
         <div class="form-group" style="margin-bottom: 20px;">
             <input type="text" id="searchInput" placeholder="Search todos by task or description..." style="width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px;">

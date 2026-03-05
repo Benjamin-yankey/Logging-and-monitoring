@@ -635,37 +635,37 @@ terraform destroy    # type 'yes'
 
 ### Before Deployment
 
-- ✅ **Change `allowed_ips`** from `0.0.0.0/0` to your IP in `terraform.tfvars`
-- ✅ **Set strong passwords** for Jenkins and Grafana admin accounts
-- ✅ **Review security group rules** to ensure minimal necessary access
-- ✅ **Configure CORS origins** via `ALLOWED_ORIGINS` environment variable
+- **Change `allowed_ips`** from `0.0.0.0/0` to your IP in `terraform.tfvars`
+- **Set strong passwords** for Jenkins and Grafana admin accounts
+- **Review security group rules** to ensure minimal necessary access
+- **Configure CORS origins** via `ALLOWED_ORIGINS` environment variable
 
 ### During Operation
 
-- 🔄 **Review security scan reports** after each build (npm audit + Trivy)
-- 🔄 **Monitor CloudWatch logs** for suspicious activity
-- 🔄 **Update dependencies regularly**: `npm audit fix` and rebuild
-- 🔄 **Rotate credentials** quarterly (Docker Hub tokens, SSH keys, passwords)
-- 🔄 **Review GuardDuty findings** in AWS Console
+- **Review security scan reports** after each build (npm audit + Trivy)
+- **Monitor CloudWatch logs** for suspicious activity
+- **Update dependencies regularly**: `npm audit fix` and rebuild
+- **Rotate credentials** quarterly (Docker Hub tokens, SSH keys, passwords)
+- **Review GuardDuty findings** in AWS Console
 
 ### Security Configurations
 
-- 🔒 **IMDSv2 enforced** on all EC2 instances (prevents SSRF)
-- 🔒 **EBS encryption** enabled on all volumes
-- 🔒 **Non-root containers** - app runs as UID 1001
-- 🔒 **Rate limiting** prevents brute force attacks
-- 🔒 **Input validation** on all API endpoints
-- 🔒 **Security headers** (HSTS, CSP) via Helmet.js
-- 🔒 **SSH access restricted** to security group rules only
-- 🔒 **No credentials in logs** - Jenkins pipeline sanitized
+- **IMDSv2 enforced** on all EC2 instances (prevents SSRF)
+- **EBS encryption** enabled on all volumes
+- **Non-root containers** - app runs as UID 1001
+- **Rate limiting** prevents brute force attacks
+- **Input validation** on all API endpoints
+- **Security headers** (HSTS, CSP) via Helmet.js
+- **SSH access restricted** to security group rules only
+- **No credentials in logs** - Jenkins pipeline sanitized
 
 ### Files Never to Commit
 
-- ❌ `*.pem` - SSH private keys
-- ❌ `terraform.tfvars` - contains secrets
-- ❌ `.env` files - environment secrets
-- ❌ `node_modules/` - dependencies
-- ❌ `*.tfstate` - Terraform state (may contain sensitive data)
+- `*.pem` - SSH private keys
+- `terraform.tfvars` - contains secrets
+- `.env` files - environment secrets
+- `node_modules/` - dependencies
+- `*.tfstate` - Terraform state (may contain sensitive data)
 
 All sensitive files are already in `.gitignore`.
 

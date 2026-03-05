@@ -25,9 +25,9 @@ Based on real-time `up` metric queries:
 
 | Service | Instance | Status | Uptime |
 |---------|----------|--------|--------|
-| Prometheus | localhost:9090 | :white_check_mark: UP | 100% |
-| Node Exporter | 10.0.2.145:9100 | :white_check_mark: UP | 100% |
-| Node App | 10.0.2.145:5000 | :x: DOWN | 0% |
+| Prometheus | localhost:9090 | UP | 100% |
+| Node Exporter | 10.0.2.145:9100 | UP | 100% |
+| Node App | 10.0.2.145:5000 | DOWN | 0% |
 
 **Critical Issue Identified:** Application service (port 5000) is unreachable, likely due to:
 - SSH connectivity issues preventing deployment

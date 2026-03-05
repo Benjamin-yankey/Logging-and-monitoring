@@ -188,7 +188,7 @@ EOF
 
 def sendSlackNotification(String buildStatus) {
     def color = buildStatus == 'SUCCESS' ? '#36a64f' : '#eb4034'
-    def headline = buildStatus == 'SUCCESS' ? "✅ Build Successful" : "❌ Build Failed"
+    def headline = buildStatus == 'SUCCESS' ? "Build Successful" : "Build Failed"
     def channel = "#yram" // Update this to your Slack channel name
     
     // Get Git details
@@ -197,7 +197,7 @@ def sendSlackNotification(String buildStatus) {
     
     // Prepare security scan summary
     def scanResults = "Trivy: High/Critical Scan Completed\nNPM Audit: Moderate/Above Scan Completed"
-    def errorBlock = buildStatus == 'FAILURE' ? "\n⚠️ *Error:* Build or deployment failed. Please check the logs.\n" : ""
+    def errorBlock = buildStatus == 'FAILURE' ? "\n*Error:* Build or deployment failed. Please check the logs.\n" : ""
     def imagePath = "${env.REGISTRY_CREDS_USR}/${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
 
     slackSend(
